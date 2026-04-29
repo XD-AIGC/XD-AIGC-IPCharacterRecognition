@@ -1,13 +1,7 @@
 # album_backend_mvp_face
 
-这是基于你之前 `album_backend_mvp` 思路升级的一版：
-
-- **embedding 模型切换为本地 Hugging Face CLIP 目录**
-  - 默认路径：`/AIGC_Group/models/hy-motion/clip-vit-large-patch1`
-- **不再对整图做 embedding**，而是先检测动漫人脸，再对每一张脸单独做 embedding
-- **多脸图像**支持：一张图可关联多个类，每张脸分别给出候选类
-- **阈值**：默认余弦相似度阈值 `0.888`
-- **标签页面**：新增 `/review/{image_id}`，可视化原图、人脸框、人脸裁剪图，并为每张脸填写/确认类名
+## 项目文档使用说明在飞书：
+https://xd.feishu.cn/wiki/UNoKwDOq2iicxmkLnkFcZhj2nPd
 
 ## 目录
 
@@ -105,19 +99,4 @@ from imgutils.detect.face import detect_faces
 4. 把该人脸 embedding 加入 Faiss 索引
 5. 后续再来相似脸时就能命中
 
-## 旧项目替换建议
 
-如果你要把这版直接并到原来的 `album_backend_mvp`，最简单的方式是：
-
-- 用这里的 `app/models.py` 替换旧模型定义
-- 新增 `app/services/face_*.py` 和 `app/services/ingest.py`
-- 用这里的 `app/routers/api.py` 替换原上传逻辑
-- 新增 `app/routers/ui.py`、`app/templates/review.html`、`app/static/*`
-- 用这里的 `app/main.py` 替换原入口
-
-## 建议的后续增强
-
-- 对同一张图里的人脸和全身图做联合重排
-- 给标签页增加“同一图多个脸一键继承现有类名”的快捷操作
-- 给 cluster 单独做浏览页
-- 对低置信度候选做人审队列
