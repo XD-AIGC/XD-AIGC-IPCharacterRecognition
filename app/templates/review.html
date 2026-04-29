@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>多脸打标签页面</title>
+  <link rel="stylesheet" href="/static/review.css" />
+</head>
+<body data-image-id="{{ image_id if image_id is not none else '' }}">
+  <div class="page-shell">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">Album Backend MVP · Face Review</div>
+        <h1>上传图片并为每张动漫人脸打标签</h1>
+        <p class="sub">先上传图片，系统会检测多张脸、做本地 embedding、检索候选类；然后你在这个页面逐张脸确认类名。</p>
+      </div>
+      <div class="pill-group">
+        <span class="pill accent">多脸支持</span>
+        <span class="pill">阈值 0.888</span>
+        <span class="pill">人脸级 embedding</span>
+      </div>
+    </header>
+
+    <section class="upload-panel glass">
+      <div class="upload-copy">
+        <h2>1. 上传图片</h2>
+        <p>支持单人和多人图。上传后会自动跳到当前图片的标签页。</p>
+      </div>
+      <form id="uploadForm" class="upload-form">
+        <label class="upload-dropzone" for="uploadInput">
+          <input id="uploadInput" name="file" type="file" accept="image/*" hidden />
+          <div class="upload-icon">✦</div>
+          <div class="upload-title">点击选择图片</div>
+          <div class="upload-hint">支持 PNG / JPG / WEBP</div>
+        </label>
+        <button type="submit" class="btn primary">上传并分析</button>
+      </form>
+      <div id="uploadStatus" class="status-line"></div>
+    </section>
+
+    <section id="reviewSection" class="review-section hidden">
+      <div class="review-grid">
+        <div class="left-column">
+          <div class="glass panel hero-panel">
+            <div class="panel-head">
+              <div>
+                <h2>2. 原图与人脸框</h2>
+                <p id="imageMeta" class="muted"></p>
+              </div>
+              <div id="reviewBadge" class="badge">待处理</div>
+            </div>
+            <div class="hero-canvas-wrap">
+              <img id="heroImage" class="hero-image" alt="uploaded image" />
+              <div id="faceOverlay" class="face-overlay"></div>
+            </div>
+          </div>
+
+          <div class="glass panel">
+            <div class="panel-head">
+              <div>
+                <h2>图片级候选类</h2>
+                <p class="muted">这是基于整张图里所有人脸聚合出来的候选类，方便你快速判断。</p>
+              </div>
+            </div>
+            <div id="imageCandidates" class="candidate-chips"></div>
+          </div>
+        </div>
+
+        <div class="right-column">
+          <div class="glass panel sticky-panel">
+            <div class="panel-head">
+              <div>
+                <h2>3. 为每张脸确认类名</h2>
+                <p class="muted">可以点击系统建议，也可以直接输入新的类名。</p>
+              </div>
+              <div class="action-row">
+                <button id="fillBestBtn" class="btn ghost" type="button">自动填入最佳建议</button>
+                <button id="saveBtn" class="btn primary" type="button">保存标签</button>
+              </div>
+            </div>
+            <div id="faceCards" class="face-cards"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <template id="faceCardTemplate">
+    <article class="face-card">
+      <div class="face-card-top">
+        <img class="face-thumb" alt="face crop" />
+        <div class="face-meta">
+          <div class="face-title"></div>
+          <div class="face-score"></div>
+          <div class="face-box"></div>
+        </div>
+      </div>
+
+      <div class="face-block">
+        <label>建议类</label>
+        <div class="candidate-chips face-suggestions"></div>
+      </div>
+
+      <div class="face-block">
+        <label>最终类名</label>
+        <input class="class-input" type="text" placeholder="例如：类_001 或 芙宁娜" />
+      </div>
+
+      <div class="face-block inline-actions">
+        <label class="checkbox-wrap">
+          <input class="skip-input" type="checkbox" />
+          <span>跳过这张脸</span>
+        </label>
+        <button class="btn ghost small fill-btn" type="button">使用最佳建议</button>
+      </div>
+    </article>
+  </template>
+
+  <script src="/static/review.js"></script>
+</body>
+</html>
